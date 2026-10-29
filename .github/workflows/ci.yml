@@ -1,0 +1,37 @@
+name: CI
+on:
+  push:
+  pull_request:
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: |
+            server/frontend/package-lock.json
+            server/database/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: server/requirements.txt
+      - name: Build React frontend
+        run: cd server/frontend && npm ci && npm run build
+      - name: Check Express service
+        run: cd server/database && npm ci && node --check app.js
+      - name: Check Django application
+        run: |
+          pip install -r server/requirements.txt
+          cd server
+          python manage.py check
+          python manage.py migrate
+          python manage.py test
+      - name: Build container images
+        run: |
+          docker build -t dealership-web .
+          docker build -t dealership-api server/database
+          docker build -t dealership-sentiment server/djangoapp/microservices

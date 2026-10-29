@@ -11,6 +11,7 @@ const PostReview = () => {
   const [model, setModel] = useState();
   const [year, setYear] = useState("");
   const [date, setDate] = useState("");
+  const [purchase, setPurchase] = useState(false);
   const [carmodels, setCarmodels] = useState([]);
 
   let curr_url = window.location.href;
@@ -32,7 +33,7 @@ const PostReview = () => {
       return;
     }
 
-    let model_split = model.split(" ");
+    let model_split = model.split("|");
     let make_chosen = model_split[0];
     let model_chosen = model_split[1];
 
@@ -40,7 +41,7 @@ const PostReview = () => {
       "name": name,
       "dealership": id,
       "review": review,
-      "purchase": true,
+      "purchase": purchase,
       "purchase_date": date,
       "car_make": make_chosen,
       "car_model": model_chosen,
@@ -95,22 +96,24 @@ const PostReview = () => {
       <Header/>
       <div  style={{margin:"5%"}}>
       <h1 style={{color:"darkblue"}}>{dealer.full_name}</h1>
+      <label htmlFor="review">Your review</label><br/>
       <textarea id='review' cols='50' rows='7' onChange={(e) => setReview(e.target.value)}></textarea>
+      <div className='input_field'><label><input type="checkbox" checked={purchase} onChange={(e) => setPurchase(e.target.checked)}/> I purchased a car here</label></div>
       <div className='input_field'>
       Purchase Date <input type="date" onChange={(e) => setDate(e.target.value)}/>
       </div>
       <div className='input_field'>
       Car Make 
       <select name="cars" id="cars" onChange={(e) => setModel(e.target.value)}>
-      <option value="" selected disabled hidden>Choose Car Make and Model</option>
+      <option value="" disabled>Choose Car Make and Model</option>
       {carmodels.map(carmodel => (
-          <option value={carmodel.CarMake+" "+carmodel.CarModel}>{carmodel.CarMake} {carmodel.CarModel}</option>
+          <option key={carmodel.CarMake + carmodel.CarModel} value={carmodel.CarMake+"|"+carmodel.CarModel}>{carmodel.CarMake} {carmodel.CarModel}</option>
       ))}
       </select>        
       </div >
 
       <div className='input_field'>
-      Car Year <input type="int" onChange={(e) => setYear(e.target.value)} max={2023} min={2015}/>
+      Car Year <input type="number" onChange={(e) => setYear(e.target.value)} max={2023} min={2015}/>
       </div>
 
       <div>
