@@ -17,7 +17,7 @@ Set `BACKEND_URL` and `SENTIMENT_ANALYZER_URL` when services run on other hosts.
 
 `docker compose up --build` starts MongoDB and all three application services. The web application is available on port 8000. The container entrypoint runs Django migrations and populates example car makes and models.
 
-`deploy/k8s.yaml` provides Kubernetes deployments, services, and data claims. Build or publish the three images under the names `dealership-web`, `dealership-api`, and `dealership-sentiment`, then create a `dealership-secrets` secret containing `django-secret-key` before applying the manifest. Change `DJANGO_ALLOWED_HOSTS` to your public hostname for a real deployment.
+`deploy/deployment.yml` provides Kubernetes deployments, services, and data claims. Build or publish the three images under the names `dealership-web`, `dealership-api`, and `dealership-sentiment`, then create a `dealership-secrets` secret containing `django-secret-key` before applying the manifest. Change `DJANGO_ALLOWED_HOSTS` to your public hostname for a real deployment.
 
 ## Main endpoints
 
